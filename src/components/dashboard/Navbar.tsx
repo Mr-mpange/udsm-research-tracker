@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Settings, Menu, X } from "lucide-react";
+import { LayoutDashboard, Menu, X } from "lucide-react";
 
 const navItems = [
   { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
-  { label: "Admin", path: "/admin", icon: Settings },
 ];
 
 export function Navbar() {
