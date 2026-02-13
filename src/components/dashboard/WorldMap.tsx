@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import L from "leaflet";
-import type { CountryData, ReaderEvent } from "@/data/mockData";
+import type { CountryData } from "@/hooks/useCountryStats";
+import type { ReaderEvent } from "@/hooks/useSimulation";
 import { X } from "lucide-react";
 import "leaflet/dist/leaflet.css";
 
@@ -69,48 +70,27 @@ export function WorldMap({ countryStats, recentEvents }: WorldMapProps) {
   const markersRef = useRef<L.CircleMarker[]>([]);
   const eventMarkersRef = useRef<L.CircleMarker[]>([]);
 
-  // Initialize map
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
-
     const map = L.map(containerRef.current, {
-      center: [5, 20],
-      zoom: 2,
-      minZoom: 2,
-      maxZoom: 6,
-      scrollWheelZoom: true,
-      zoomControl: true,
+      center: [5, 20], zoom: 2, minZoom: 2, maxZoom: 6, scrollWheelZoom: true, zoomControl: true,
     });
-
     L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png", {
       attribution: '&copy; <a href="https://carto.com/">CARTO</a>',
     }).addTo(map);
-
     mapRef.current = map;
-
-    return () => {
-      map.remove();
-      mapRef.current = null;
-    };
+    return () => { map.remove(); mapRef.current = null; };
   }, []);
 
-  // Update country markers
   useEffect(() => {
     if (!mapRef.current) return;
     const map = mapRef.current;
-
-    // Remove old markers
     markersRef.current.forEach(m => map.removeLayer(m));
     markersRef.current = [];
-
     const countries = Array.from(countryStats.values());
     countries.forEach(c => {
       const marker = L.circleMarker([c.lat, c.lng], {
-        radius: getRadius(c.reads),
-        color: getColor(c.reads),
-        fillColor: getColor(c.reads),
-        fillOpacity: 0.6,
-        weight: 2,
+        radius: getRadius(c.reads), color: getColor(c.reads), fillColor: getColor(c.reads), fillOpacity: 0.6, weight: 2,
       })
         .bindPopup(`<div style="font-family:system-ui;font-size:13px"><b>${c.name}</b><br>Reads: ${c.reads.toLocaleString()}</div>`)
         .on("click", () => setSelectedCountry(c))
@@ -119,21 +99,14 @@ export function WorldMap({ countryStats, recentEvents }: WorldMapProps) {
     });
   }, [countryStats]);
 
-  // Update event markers
   useEffect(() => {
     if (!mapRef.current) return;
     const map = mapRef.current;
-
     eventMarkersRef.current.forEach(m => map.removeLayer(m));
     eventMarkersRef.current = [];
-
     recentEvents.slice(0, 5).forEach(e => {
       const m = L.circleMarker([e.lat, e.lng], {
-        radius: 4,
-        color: "#FFCC00",
-        fillColor: "#FFCC00",
-        fillOpacity: 0.8,
-        weight: 2,
+        radius: 4, color: "#FFCC00", fillColor: "#FFCC00", fillOpacity: 0.8, weight: 2,
       }).addTo(map);
       eventMarkersRef.current.push(m);
     });

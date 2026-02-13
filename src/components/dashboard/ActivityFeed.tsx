@@ -1,7 +1,7 @@
-import { articles, type ReaderEvent } from "@/data/mockData";
+import type { ReaderEvent } from "@/hooks/useSimulation";
+import type { Article } from "@/hooks/useArticles";
 import { Globe } from "lucide-react";
 
-// Country code to flag emoji
 function countryFlag(code: string): string {
   return code
     .toUpperCase()
@@ -12,9 +12,10 @@ function countryFlag(code: string): string {
 
 interface ActivityFeedProps {
   recentEvents: ReaderEvent[];
+  articles: Article[];
 }
 
-export function ActivityFeed({ recentEvents }: ActivityFeedProps) {
+export function ActivityFeed({ recentEvents, articles }: ActivityFeedProps) {
   const articleMap = new Map(articles.map(a => [a.id, a]));
 
   return (

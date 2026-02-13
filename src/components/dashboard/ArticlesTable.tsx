@@ -1,10 +1,14 @@
-import { articles } from "@/data/mockData";
 import { useState } from "react";
 import { ArrowUpDown } from "lucide-react";
+import type { Article } from "@/hooks/useArticles";
 
 type SortKey = "downloads" | "citations" | "title";
 
-export function ArticlesTable() {
+interface ArticlesTableProps {
+  articles: Article[];
+}
+
+export function ArticlesTable({ articles }: ArticlesTableProps) {
   const [sortKey, setSortKey] = useState<SortKey>("downloads");
   const [sortAsc, setSortAsc] = useState(false);
 
