@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Settings, Menu, X, GraduationCap } from "lucide-react";
+import { LayoutDashboard, Settings, Menu, X } from "lucide-react";
 
 const navItems = [
   { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
@@ -48,8 +48,8 @@ export function Navbar() {
           <aside className="absolute left-0 top-0 h-full w-64 bg-primary shadow-xl flex flex-col">
             <div className="flex items-center justify-between p-4 border-b border-primary/30">
               <div className="flex items-center gap-2">
-                <div className="h-8 w-8 rounded-full bg-accent flex items-center justify-center">
-                  <GraduationCap className="h-5 w-5 text-accent-foreground" />
+                <div className="h-8 w-8 rounded-full bg-accent overflow-hidden flex items-center justify-center">
+                  <img src="/favicon.jpeg" alt="UDSM Logo" className="h-full w-full object-cover" />
                 </div>
                 <span className="text-sm font-bold text-primary-foreground">UDSM</span>
               </div>

@@ -51,6 +51,15 @@ export function ArticlesTable({ articles }: ArticlesTableProps) {
               <tr key={article.id} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
                 <td className="p-3 max-w-xs">
                   <p className="font-medium text-foreground truncate">{article.title}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    {article.authors.slice(0, 3).join(", ")}
+                    {article.authors.length > 3 && ` +${article.authors.length - 3} more`}
+                  </p>
+                  {article.publishedDate && (
+                    <p className="text-xs text-muted-foreground/70 mt-0.5">
+                      Published: {new Date(article.publishedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                    </p>
+                  )}
                   <p className="text-xs text-muted-foreground mt-0.5 md:hidden">{article.journal}</p>
                 </td>
                 <td className="p-3 text-muted-foreground hidden md:table-cell text-xs">{article.journal}</td>

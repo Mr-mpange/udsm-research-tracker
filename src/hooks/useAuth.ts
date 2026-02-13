@@ -15,12 +15,23 @@ export function useAuth() {
         setUser(session?.user ?? null);
 
         if (session?.user) {
-          const { data } = await supabase
-            .from("user_roles")
-            .select("role")
-            .eq("user_id", session.user.id)
-            .eq("role", "admin");
-          setIsAdmin((data ?? []).length > 0);
+          try {
+            const { data, error } = await supabase
+              .from("user_roles")
+              .select("role")
+              .eq("user_id", session.user.id)
+              .eq("role", "admin");
+            
+            if (error) {
+              console.warn("user_roles table not found or error:", error);
+              setIsAdmin(false);
+            } else {
+              setIsAdmin((data ?? []).length > 0);
+            }
+          } catch (err) {
+            console.warn("Error checking admin role:", err);
+            setIsAdmin(false);
+          }
         } else {
           setIsAdmin(false);
         }
@@ -37,8 +48,18 @@ export function useAuth() {
           .select("role")
           .eq("user_id", session.user.id)
           .eq("role", "admin")
-          .then(({ data }) => {
-            setIsAdmin((data ?? []).length > 0);
+          .then(({ data, error }) => {
+            if (error) {
+              console.warn("user_roles table not found or error:", error);
+              setIsAdmin(false);
+            } else {
+              setIsAdmin((data ?? []).length > 0);
+            }
+            setLoading(false);
+          })
+          .catch((err) => {
+            console.warn("Error checking admin role:", err);
+            setIsAdmin(false);
             setLoading(false);
           });
       } else {
