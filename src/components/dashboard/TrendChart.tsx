@@ -1,6 +1,6 @@
-import { downloadTrendData, journals } from "@/data/mockData";
+import { downloadTrendData } from "@/data/mockData";
 import { useState } from "react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 export function TrendChart() {
   const [filter, setFilter] = useState<string>("all");

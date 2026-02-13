@@ -14,7 +14,119 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      articles: {
+        Row: {
+          authors: string[]
+          citations: number
+          created_at: string
+          doi: string
+          downloads: number
+          id: string
+          journal: string
+          published_date: string | null
+          title: string
+        }
+        Insert: {
+          authors?: string[]
+          citations?: number
+          created_at?: string
+          doi: string
+          downloads?: number
+          id?: string
+          journal: string
+          published_date?: string | null
+          title: string
+        }
+        Update: {
+          authors?: string[]
+          citations?: number
+          created_at?: string
+          doi?: string
+          downloads?: number
+          id?: string
+          journal?: string
+          published_date?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
+      country_stats: {
+        Row: {
+          code: string
+          downloads: number
+          id: string
+          lat: number | null
+          lng: number | null
+          name: string
+          reads: number
+          top_article: string | null
+          top_journal: string | null
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          downloads?: number
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          name: string
+          reads?: number
+          top_article?: string | null
+          top_journal?: string | null
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          downloads?: number
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          name?: string
+          reads?: number
+          top_article?: string | null
+          top_journal?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      reader_events: {
+        Row: {
+          article_id: string | null
+          country: string
+          country_code: string
+          created_at: string
+          id: string
+          lat: number | null
+          lng: number | null
+        }
+        Insert: {
+          article_id?: string | null
+          country: string
+          country_code: string
+          created_at?: string
+          id?: string
+          lat?: number | null
+          lng?: number | null
+        }
+        Update: {
+          article_id?: string | null
+          country?: string
+          country_code?: string
+          created_at?: string
+          id?: string
+          lat?: number | null
+          lng?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reader_events_article_id_fkey"
+            columns: ["article_id"]
+            isOneToOne: false
+            referencedRelation: "articles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
