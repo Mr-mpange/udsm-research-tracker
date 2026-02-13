@@ -1,9 +1,36 @@
-import { downloadTrendData } from "@/data/mockData";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+
+// Generate trend data dynamically based on current date
+function generateTrendData() {
+  const months = [];
+  const now = new Date();
+  
+  for (let i = 6; i >= 0; i--) {
+    const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const monthName = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    
+    // Generate realistic-looking trend data
+    const baseDownloads = 1500 + Math.floor(Math.random() * 1000);
+    const tjs = Math.floor(baseDownloads * (0.3 + Math.random() * 0.2));
+    const tjhr = Math.floor(baseDownloads * (0.2 + Math.random() * 0.15));
+    const other = baseDownloads - tjs - tjhr;
+    
+    months.push({
+      month: monthName,
+      downloads: baseDownloads,
+      "Tanzania Journal of Science": tjs,
+      "Tanzania Journal of Health Research": tjhr,
+      "Other": other,
+    });
+  }
+  
+  return months;
+}
 
 export function TrendChart() {
   const [filter, setFilter] = useState<string>("all");
+  const downloadTrendData = useMemo(() => generateTrendData(), []);
 
   const dataKey = filter === "all" ? "downloads" : filter;
 

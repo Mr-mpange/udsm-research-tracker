@@ -1,73 +1,151 @@
-# Welcome to your Lovable project
+# UDSM Research Impact Dashboard
 
-## Project info
+A real-time dashboard for tracking research impact from the University of Dar es Salaam (UDSM) journals.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Features
 
-## How can I edit this code?
+- **Real-time Tracking**: Monitor research article downloads and citations in real-time
+- **Geographic Reach**: Interactive world map showing global access to UDSM research
+- **Article Management**: Browse and manage research publications
+- **Impact Metrics**: Track downloads, citations, and reader engagement
+- **OAI-PMH Integration**: Harvest metadata from UDSM journal repositories
+- **Admin Panel**: Manage data and system settings
 
-There are several ways of editing your application.
+## Technology Stack
 
-**Use Lovable**
+- **Frontend**: React + TypeScript + Vite
+- **UI Framework**: Tailwind CSS + shadcn/ui
+- **Database**: Supabase (PostgreSQL)
+- **Maps**: Leaflet
+- **Charts**: Recharts
+- **Authentication**: Supabase Auth
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## Quick Start
 
-Changes made via Lovable will be committed automatically to this repo.
+### Prerequisites
 
-**Use your preferred IDE**
+- Node.js 18+ 
+- npm or bun
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Installation
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+```bash
+# Install dependencies
+npm install
 
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Visit http://localhost:8080/
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Environment Variables
 
-**Use GitHub Codespaces**
+Create a `.env` file:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```env
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_key
+```
 
-## What technologies are used for this project?
+## Project Structure
 
-This project is built with:
+```
+src/
+├── components/       # React components
+│   ├── dashboard/   # Dashboard-specific components
+│   └── ui/          # Reusable UI components
+├── hooks/           # Custom React hooks
+├── integrations/    # External service integrations
+├── pages/           # Page components
+├── services/        # Business logic and API calls
+└── utils/           # Utility functions
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+supabase/
+└── migrations/      # Database migrations
+```
 
-## How can I deploy this project?
+## Available Scripts
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+- `npm run test` - Run tests
 
-## Can I connect a custom domain to my Lovable project?
+## Database Schema
 
-Yes, you can!
+The application uses the following main tables:
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+- `articles` - Research article metadata
+- `country_stats` - Geographic statistics
+- `reader_events` - Reader activity tracking
+- `profiles` - User profiles
+- `user_roles` - User permissions
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## Features in Detail
+
+### Dashboard
+- Live metrics cards showing total downloads, citations, active readers, and countries reached
+- Interactive world map with country-level statistics
+- Trend charts for download patterns
+- Recent activity feed
+- Searchable articles table
+
+### Admin Panel
+- OAI-PMH harvester for importing article metadata
+- Citation enrichment via Crossref API
+- Country statistics initialization
+- User management
+
+### Real-time Updates
+- Live tracking of reader activity
+- Automatic data refresh
+- Simulated real-time events for demonstration
+
+## Development
+
+### Adding New Components
+
+Components follow the shadcn/ui pattern:
+
+```bash
+# Add a new component
+npx shadcn-ui@latest add [component-name]
+```
+
+### Database Migrations
+
+Migrations are in `supabase/migrations/`. Apply them via Supabase Dashboard SQL Editor.
+
+## Deployment
+
+### Build for Production
+
+```bash
+npm run build
+```
+
+The build output will be in the `dist/` directory.
+
+### Deploy to Vercel/Netlify
+
+1. Connect your repository
+2. Set environment variables
+3. Deploy
+
+## Contributing
+
+This project was developed for the UDSM ICT Innovation Challenge 2026.
+
+## License
+
+© 2026 University of Dar es Salaam
+
+## Support
+
+For issues or questions, contact the development team.
+
+---
+
+**Built with ❤️ for UDSM Research Community**

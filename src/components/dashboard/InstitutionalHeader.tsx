@@ -1,4 +1,4 @@
-import { GraduationCap, Globe } from "lucide-react";
+import { BookOpen, Globe } from "lucide-react";
 
 export function InstitutionalHeader() {
   return (
@@ -6,7 +6,7 @@ export function InstitutionalHeader() {
       <div className="container mx-auto px-4 py-5">
         <div className="flex items-center gap-4">
           <div className="flex h-14 w-14 items-center justify-center rounded-full bg-accent">
-            <GraduationCap className="h-8 w-8 text-accent-foreground" />
+            <BookOpen className="h-8 w-8 text-accent-foreground" />
           </div>
           <div className="flex-1">
             <h1 className="text-xl md:text-2xl font-bold text-primary-foreground leading-tight">

@@ -1,21 +1,13 @@
-import { useState } from "react";
+import { useState, type ChangeEvent } from "react";
 import { InstitutionalHeader } from "@/components/dashboard/InstitutionalHeader";
 import { Navbar } from "@/components/dashboard/Navbar";
 import { useSimulation } from "@/hooks/useSimulation";
 import { useAuth } from "@/hooks/useAuth";
 import { useArticles } from "@/hooks/useArticles";
-import { Settings, Database, RefreshCw, Activity, Shield, LogOut } from "lucide-react";
-
-const journals = [
-  "Tanzania Journal of Science",
-  "Tanzania Journal of Engineering and Technology",
-  "Eastern Africa Social Science Research Review",
-  "Journal of Linguistics and Language in Education",
-  "Tanzania Journal of Health Research",
-  "African Journal of Marine Science",
-  "Tanzania Journal of Development Studies",
-  "UDSM Journal of Arts and Social Sciences",
-];
+import { RefreshCw, Activity, Shield, LogOut, Download, Search } from "lucide-react";
+import { identifyRepository } from "@/services/oaiHarvester";
+import { seedArticlesFromOAI, enrichArticlesWithCitations, seedInitialCountryStats } from "@/services/dataSeeder";
+import { toast } from "sonner";
 
 const Admin = () => {
   const { user, loading, signIn, signUp, signOut } = useAuth();
@@ -25,7 +17,86 @@ const Admin = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [signUpSuccess, setSignUpSuccess] = useState(false);
   const sim = useSimulation(true);
-  const { data: articles } = useArticles();
+  const { data: articles, refetch: refetchArticles } = useArticles();
+  
+  // OAI Harvesting state
+  const [oaiEndpoint, setOaiEndpoint] = useState("https://journals.udsm.ac.tz/oai");
+  const [isHarvesting, setIsHarvesting] = useState(false);
+  const [harvestStatus, setHarvestStatus] = useState("");
+  const [repositoryInfo, setRepositoryInfo] = useState<any>(null);
+
+  // Handler functions
+  const handleIdentifyRepository = async () => {
+    setHarvestStatus("Identifying repository...");
+    const info = await identifyRepository(oaiEndpoint);
+    if (info.error) {
+      toast.error(`Failed to identify repository: ${info.error}`);
+      setHarvestStatus("");
+    } else {
+      setRepositoryInfo(info);
+      toast.success(`Connected to ${info.repositoryName}`);
+      setHarvestStatus(`Repository: ${info.repositoryName}`);
+    }
+  };
+
+  const handleHarvestArticles = async () => {
+    setIsHarvesting(true);
+    setHarvestStatus("Harvesting articles from OAI-PMH endpoint...");
+    
+    try {
+      const result = await seedArticlesFromOAI(oaiEndpoint, { maxRecords: 500 });
+      
+      if (result.success) {
+        toast.success(`Successfully harvested ${result.articlesAdded} articles from ${result.journalsFound} journals`);
+        setHarvestStatus(`Harvested ${result.articlesAdded} articles`);
+        await refetchArticles();
+      } else {
+        toast.error(`Harvest failed: ${result.errors.join(", ")}`);
+        setHarvestStatus("Harvest failed");
+      }
+      
+      if (result.errors.length > 0) {
+        console.error("Harvest errors:", result.errors);
+      }
+    } catch (error) {
+      toast.error(`Harvest error: ${error instanceof Error ? error.message : "Unknown error"}`);
+      setHarvestStatus("Error during harvest");
+    } finally {
+      setIsHarvesting(false);
+    }
+  };
+
+  const handleEnrichCitations = async () => {
+    setHarvestStatus("Enriching articles with citation data from Crossref...");
+    toast.info("Fetching citation counts from Crossref API...");
+    
+    try {
+      const result = await enrichArticlesWithCitations();
+      toast.success(`Updated ${result.updated} articles with citation counts`);
+      setHarvestStatus(`Updated ${result.updated} articles`);
+      
+      if (result.errors.length > 0) {
+        console.error("Citation enrichment errors:", result.errors);
+      }
+      
+      await refetchArticles();
+    } catch (error) {
+      toast.error(`Citation enrichment failed: ${error instanceof Error ? error.message : "Unknown"}`);
+      setHarvestStatus("Citation enrichment failed");
+    }
+  };
+
+  const handleInitializeCountries = async () => {
+    setHarvestStatus("Initializing country statistics...");
+    try {
+      await seedInitialCountryStats();
+      toast.success("Country statistics initialized");
+      setHarvestStatus("Countries initialized");
+    } catch (error) {
+      toast.error("Failed to initialize countries");
+      setHarvestStatus("");
+    }
+  };
 
   if (loading) {
     return (
@@ -61,14 +132,14 @@ const Admin = () => {
               type="email"
               placeholder="Email"
               value={email}
-              onChange={e => setEmail(e.target.value)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
               className="w-full px-3 py-2 border rounded-md bg-background text-foreground text-sm font-sans-ui"
             />
             <input
               type="password"
               placeholder="Password"
               value={password}
-              onChange={e => setPassword(e.target.value)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
               className="w-full px-3 py-2 border rounded-md bg-background text-foreground text-sm font-sans-ui"
             />
             <button
@@ -126,8 +197,8 @@ const Admin = () => {
               </p>
             </div>
             <div className="p-3 bg-muted/50 rounded-md">
-              <p className="text-muted-foreground text-xs">OAI Endpoint</p>
-              <p className="font-semibold text-xs">journals.udsm.ac.tz/oai</p>
+              <p className="text-muted-foreground text-xs">Articles in DB</p>
+              <p className="font-semibold text-lg">{articles?.length || 0}</p>
             </div>
             <div className="p-3 bg-muted/50 rounded-md">
               <p className="text-muted-foreground text-xs">Crossref API</p>
@@ -139,24 +210,92 @@ const Admin = () => {
               className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-xs font-semibold font-sans-ui hover:opacity-90 transition-opacity">
               {sim.isRunning ? "Stop Simulation" : "Start Simulation"}
             </button>
-            <button className="px-4 py-2 border rounded-md text-xs font-semibold font-sans-ui hover:bg-muted transition-colors flex items-center gap-1">
-              <RefreshCw className="h-3 w-3" /> Refresh Metadata
-            </button>
           </div>
         </div>
 
-        {/* Journals */}
+        {/* OAI-PMH Harvester */}
         <div className="bg-card border rounded-lg shadow-sm p-5">
           <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-            <Database className="h-5 w-5 text-primary" /> Harvested Journals
+            <Download className="h-5 w-5 text-primary" /> OAI-PMH Data Harvester
           </h2>
-          <div className="grid sm:grid-cols-2 gap-2 font-sans-ui">
-            {journals.map(j => (
-              <div key={j} className="p-3 border rounded-md text-sm flex items-center justify-between">
-                <span>{j}</span>
-                <span className="text-xs bg-success/20 text-success px-2 py-0.5 rounded-full">Active</span>
+          
+          <div className="space-y-4">
+            <div>
+              <label className="text-xs font-semibold text-muted-foreground block mb-2">
+                OAI-PMH Endpoint URL
+              </label>
+              <input
+                type="text"
+                value={oaiEndpoint}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setOaiEndpoint(e.target.value)}
+                placeholder="https://journals.udsm.ac.tz/oai"
+                className="w-full px-3 py-2 border rounded-md bg-background text-foreground text-sm font-sans-ui"
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                Default: https://journals.udsm.ac.tz/oai or try /index.php/oai
+              </p>
+            </div>
+
+            {repositoryInfo && (
+              <div className="p-3 bg-success/10 border border-success/30 rounded-md text-xs">
+                <p className="font-semibold text-success mb-1">✓ Connected to Repository</p>
+                <p><strong>Name:</strong> {repositoryInfo.repositoryName}</p>
+                <p><strong>Base URL:</strong> {repositoryInfo.baseURL}</p>
+                <p><strong>Protocol:</strong> {repositoryInfo.protocolVersion}</p>
+                <p><strong>Earliest Record:</strong> {repositoryInfo.earliestDatestamp}</p>
               </div>
-            ))}
+            )}
+
+            {harvestStatus && (
+              <div className="p-3 bg-info/10 border border-info/30 rounded-md text-xs text-info">
+                {harvestStatus}
+              </div>
+            )}
+
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={handleIdentifyRepository}
+                disabled={isHarvesting}
+                className="px-4 py-2 border rounded-md text-xs font-semibold font-sans-ui hover:bg-muted transition-colors flex items-center gap-1 disabled:opacity-50"
+              >
+                <Search className="h-3 w-3" /> Test Connection
+              </button>
+              
+              <button
+                onClick={handleHarvestArticles}
+                disabled={isHarvesting}
+                className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-xs font-semibold font-sans-ui hover:opacity-90 transition-opacity flex items-center gap-1 disabled:opacity-50"
+              >
+                <Download className="h-3 w-3" /> 
+                {isHarvesting ? "Harvesting..." : "Harvest Articles"}
+              </button>
+
+              <button
+                onClick={handleEnrichCitations}
+                disabled={isHarvesting}
+                className="px-4 py-2 border rounded-md text-xs font-semibold font-sans-ui hover:bg-muted transition-colors flex items-center gap-1 disabled:opacity-50"
+              >
+                <RefreshCw className="h-3 w-3" /> Enrich Citations
+              </button>
+
+              <button
+                onClick={handleInitializeCountries}
+                disabled={isHarvesting}
+                className="px-4 py-2 border rounded-md text-xs font-semibold font-sans-ui hover:bg-muted transition-colors disabled:opacity-50"
+              >
+                Initialize Countries
+              </button>
+            </div>
+
+            <div className="text-xs text-muted-foreground space-y-1">
+              <p><strong>Instructions:</strong></p>
+              <ol className="list-decimal list-inside space-y-1 ml-2">
+                <li>Click "Test Connection" to verify the OAI-PMH endpoint</li>
+                <li>Click "Harvest Articles" to fetch metadata from UDSM journals</li>
+                <li>Click "Enrich Citations" to fetch citation counts from Crossref</li>
+                <li>Click "Initialize Countries" to set up geographic tracking</li>
+              </ol>
+            </div>
           </div>
         </div>
 
@@ -169,16 +308,24 @@ const Admin = () => {
                 <tr className="border-b bg-muted/50">
                   <th className="text-left p-2 font-semibold">Title</th>
                   <th className="text-left p-2 font-semibold hidden md:table-cell">Authors</th>
-                  <th className="text-left p-2 font-semibold">DOI</th>
+                  <th className="text-left p-2 font-semibold">Journal Link</th>
                   <th className="text-left p-2 font-semibold hidden sm:table-cell">Published</th>
                 </tr>
               </thead>
               <tbody>
-                {(articles ?? []).map(a => (
+                {(articles ?? []).map((a: any) => (
                   <tr key={a.id} className="border-b last:border-0 hover:bg-muted/30">
                     <td className="p-2 max-w-xs truncate">{a.title}</td>
                     <td className="p-2 text-muted-foreground hidden md:table-cell">{a.authors.join(", ")}</td>
-                    <td className="p-2 text-primary">{a.doi}</td>
+                    <td className="p-2">
+                      <a 
+                        href="https://journals.udsm.ac.tz/index.php/tjpsd" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline text-xs">
+                        View Journal →
+                      </a>
+                    </td>
                     <td className="p-2 text-muted-foreground hidden sm:table-cell">{a.publishedDate}</td>
                   </tr>
                 ))}

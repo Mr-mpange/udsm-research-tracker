@@ -43,7 +43,7 @@ export function ArticlesTable({ articles }: ArticlesTableProps) {
               <th className="text-right p-3 font-semibold text-muted-foreground cursor-pointer" onClick={() => toggleSort("citations")}>
                 <span className="flex items-center justify-end gap-1">Citations <ArrowUpDown className="h-3 w-3" /></span>
               </th>
-              <th className="text-left p-3 font-semibold text-muted-foreground hidden lg:table-cell">DOI</th>
+              <th className="text-left p-3 font-semibold text-muted-foreground hidden lg:table-cell">Journal Link</th>
             </tr>
           </thead>
           <tbody>
@@ -57,8 +57,15 @@ export function ArticlesTable({ articles }: ArticlesTableProps) {
                 <td className="p-3 text-right font-semibold tabular-nums">{article.downloads.toLocaleString()}</td>
                 <td className="p-3 text-right font-semibold tabular-nums">{article.citations.toLocaleString()}</td>
                 <td className="p-3 hidden lg:table-cell">
-                  <a href={`https://doi.org/${article.doi}`} target="_blank" rel="noopener noreferrer"
-                    className="text-xs text-primary hover:underline">{article.doi}</a>
+                  <a 
+                    href="https://journals.udsm.ac.tz/index.php/tjpsd" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-xs text-primary hover:underline" 
+                    title="View journal on UDSM Journals"
+                  >
+                    View Journal →
+                  </a>
                 </td>
               </tr>
             ))}
