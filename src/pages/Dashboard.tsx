@@ -43,11 +43,11 @@ const Dashboard = () => {
             <TrendChart />
           </div>
           <div className="lg:col-span-1">
-            <ActivityFeed recentEvents={sim.recentEvents} />
+            <ActivityFeed recentEvents={sim.recentEvents} articles={sim.articles} />
           </div>
         </div>
 
-        <ArticlesTable />
+        <ArticlesTable articles={sim.articles} />
 
         <footer className="text-center py-6 border-t">
           <p className="text-xs text-muted-foreground font-sans-ui">

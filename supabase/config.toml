@@ -1,1 +1,4 @@
 project_id = "bnexttvxmysqrgdmmfap"
+
+[functions.crossref-lookup]
+verify_jwt = false
