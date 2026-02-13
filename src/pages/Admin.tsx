@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { InstitutionalHeader } from "@/components/dashboard/InstitutionalHeader";
+import { Navbar } from "@/components/dashboard/Navbar";
 import { useSimulation } from "@/hooks/useSimulation";
 import { articles, journals } from "@/data/mockData";
 import { Settings, Database, RefreshCw, Activity, Shield, ArrowLeft } from "lucide-react";
@@ -55,16 +56,7 @@ const Admin = () => {
   return (
     <div className="min-h-screen bg-background">
       <InstitutionalHeader />
-      <div className="bg-primary/5 border-b">
-        <div className="container mx-auto px-4 py-2 flex items-center justify-between">
-          <Link to="/dashboard" className="text-xs text-primary hover:underline font-sans-ui flex items-center gap-1">
-            <ArrowLeft className="h-3 w-3" /> Back to Dashboard
-          </Link>
-          <span className="text-xs text-muted-foreground font-sans-ui flex items-center gap-1">
-            <Settings className="h-3 w-3" /> Admin Panel
-          </span>
-        </div>
-      </div>
+      <Navbar />
 
       <main className="container mx-auto px-4 py-6 space-y-6">
         {/* System Status */}

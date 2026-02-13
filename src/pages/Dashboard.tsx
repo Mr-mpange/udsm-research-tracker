@@ -1,10 +1,11 @@
 import { InstitutionalHeader } from "@/components/dashboard/InstitutionalHeader";
+import { Navbar } from "@/components/dashboard/Navbar";
 import { LiveMetrics } from "@/components/dashboard/LiveMetrics";
 import { WorldMap } from "@/components/dashboard/WorldMap";
 import { TrendChart } from "@/components/dashboard/TrendChart";
 import { ArticlesTable } from "@/components/dashboard/ArticlesTable";
+import { ActivityFeed } from "@/components/dashboard/ActivityFeed";
 import { useSimulation } from "@/hooks/useSimulation";
-import { Activity } from "lucide-react";
 
 const Dashboard = () => {
   const sim = useSimulation(true);
@@ -12,6 +13,7 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-background">
       <InstitutionalHeader />
+      <Navbar />
 
       {/* Live indicator bar */}
       <div className="bg-primary/5 border-b">
@@ -36,12 +38,16 @@ const Dashboard = () => {
 
         <WorldMap countryStats={sim.countryStats} recentEvents={sim.recentEvents} />
 
-        <div className="grid lg:grid-cols-2 gap-6">
-          <TrendChart />
+        <div className="grid lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <TrendChart />
+          </div>
           <div className="lg:col-span-1">
-            <ArticlesTable />
+            <ActivityFeed recentEvents={sim.recentEvents} />
           </div>
         </div>
+
+        <ArticlesTable />
 
         <footer className="text-center py-6 border-t">
           <p className="text-xs text-muted-foreground font-sans-ui">
