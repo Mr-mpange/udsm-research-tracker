@@ -150,3 +150,7 @@ This project was developed for the UDSM ICT Innovation Challenge 2026.
 - UDSM ICT Innovation Challenge organizers
 - Open Journal Systems (OJS) community
 - shadcn/ui for the component library
+
+
+## For live demo 
+-Visit  https://mr-mpange.github.io/udsm-research-tracker/
