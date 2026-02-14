@@ -5,22 +5,25 @@ import { WorldMap } from "@/components/dashboard/WorldMap";
 import { TrendChart } from "@/components/dashboard/TrendChart";
 import { ArticlesTable } from "@/components/dashboard/ArticlesTable";
 import { ActivityFeed } from "@/components/dashboard/ActivityFeed";
+import { JournalSearch } from "@/components/dashboard/JournalSearch";
 import { useSimulation } from "@/hooks/useSimulation";
 import { useArticles } from "@/hooks/useArticles";
 import { useCountryStats } from "@/hooks/useCountryStats";
+import { useJournals } from "@/hooks/useJournals";
 import { useEffect } from "react";
 
 const Dashboard = () => {
   const sim = useSimulation(true);
   const { data: articles, isLoading: articlesLoading } = useArticles();
   const { data: countries, isLoading: countriesLoading } = useCountryStats();
+  const { data: journals, isLoading: journalsLoading } = useJournals();
 
   // Check database status on mount (only in development)
   useEffect(() => {
     // Database check removed for production
   }, []);
 
-  const isLoading = articlesLoading || countriesLoading;
+  const isLoading = articlesLoading || countriesLoading || journalsLoading;
 
   return (
     <div className="min-h-screen bg-background">
@@ -58,6 +61,8 @@ const Dashboard = () => {
             />
 
             <WorldMap countryStats={sim.countryStats} recentEvents={sim.recentEvents} />
+
+            <JournalSearch journals={journals || []} />
 
             <div className="grid lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2">

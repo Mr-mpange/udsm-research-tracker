@@ -50,6 +50,42 @@ export type Database = {
         }
         Relationships: []
       }
+      journals: {
+        Row: {
+          id: string
+          title: string
+          issn: string | null
+          description: string | null
+          cover_image_url: string | null
+          website_url: string | null
+          publisher: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          issn?: string | null
+          description?: string | null
+          cover_image_url?: string | null
+          website_url?: string | null
+          publisher?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          issn?: string | null
+          description?: string | null
+          cover_image_url?: string | null
+          website_url?: string | null
+          publisher?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       country_stats: {
         Row: {
           code: string
