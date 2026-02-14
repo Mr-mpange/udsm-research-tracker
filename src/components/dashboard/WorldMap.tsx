@@ -118,7 +118,7 @@ export function WorldMap({ countryStats, recentEvents }: WorldMapProps) {
         <h2 className="text-lg font-bold text-foreground">Global Readership Map</h2>
         <p className="text-xs text-muted-foreground font-sans-ui">Click a marker for details · Live reader events shown in gold</p>
       </div>
-      <div className="relative h-[400px] md:h-[500px]">
+      <div className="relative h-[300px] sm:h-[400px] md:h-[500px]">
         <div ref={containerRef} className="h-full w-full" />
         <CountryPanel country={selectedCountry} onClose={() => setSelectedCountry(null)} />
       </div>

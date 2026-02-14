@@ -32,18 +32,18 @@ const Dashboard = () => {
 
       {/* Live indicator bar */}
       <div className="bg-primary/5 border-b">
-        <div className="container mx-auto px-4 py-2 flex items-center gap-2">
-          <span className="relative flex h-2.5 w-2.5">
+        <div className="container mx-auto px-3 sm:px-4 py-2 flex items-center gap-2">
+          <span className="relative flex h-2 w-2 sm:h-2.5 sm:w-2.5 shrink-0">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75" />
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-success" />
+            <span className="relative inline-flex rounded-full h-full w-full bg-success" />
           </span>
-          <span className="text-xs text-muted-foreground font-sans-ui">
+          <span className="text-[10px] sm:text-xs text-muted-foreground font-sans-ui truncate">
             {isLoading ? "Loading research data..." : "Live tracking active · Real-time research impact monitoring"}
           </span>
         </div>
       </div>
 
-      <main className="container mx-auto px-4 py-6 space-y-6">
+      <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6">
         {isLoading ? (
           <div className="flex items-center justify-center py-20">
             <div className="text-center space-y-3">

@@ -29,15 +29,15 @@ function AnimatedCounter({ value, label, icon }: AnimatedCounterProps) {
   }, [value]);
 
   return (
-    <div className="bg-card rounded-lg border p-5 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow">
-      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary shrink-0">
+    <div className="bg-card rounded-lg border p-3 sm:p-5 flex items-center gap-2 sm:gap-4 shadow-sm hover:shadow-md transition-shadow">
+      <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-lg bg-primary/10 text-primary shrink-0">
         {icon}
       </div>
-      <div>
-        <p className="text-2xl md:text-3xl font-bold text-foreground font-sans-ui tabular-nums">
+      <div className="min-w-0 flex-1">
+        <p className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground font-sans-ui tabular-nums truncate">
           {display.toLocaleString()}
         </p>
-        <p className="text-xs text-muted-foreground font-sans-ui uppercase tracking-wide">{label}</p>
+        <p className="text-[10px] sm:text-xs text-muted-foreground font-sans-ui uppercase tracking-wide truncate">{label}</p>
       </div>
     </div>
   );
@@ -52,11 +52,11 @@ interface LiveMetricsProps {
 
 export function LiveMetrics({ totalDownloads, totalCitations, activeReaders, countriesReached }: LiveMetricsProps) {
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      <AnimatedCounter value={totalDownloads} label="Total Downloads" icon={<Download className="h-6 w-6" />} />
-      <AnimatedCounter value={totalCitations} label="Total Citations" icon={<BookOpen className="h-6 w-6" />} />
-      <AnimatedCounter value={activeReaders} label="Active Readers" icon={<Users className="h-6 w-6" />} />
-      <AnimatedCounter value={countriesReached} label="Countries Reached" icon={<Globe2 className="h-6 w-6" />} />
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
+      <AnimatedCounter value={totalDownloads} label="Total Downloads" icon={<Download className="h-5 w-5 sm:h-6 sm:w-6" />} />
+      <AnimatedCounter value={totalCitations} label="Total Citations" icon={<BookOpen className="h-5 w-5 sm:h-6 sm:w-6" />} />
+      <AnimatedCounter value={activeReaders} label="Active Readers" icon={<Users className="h-5 w-5 sm:h-6 sm:w-6" />} />
+      <AnimatedCounter value={countriesReached} label="Countries Reached" icon={<Globe2 className="h-5 w-5 sm:h-6 sm:w-6" />} />
     </div>
   );
 }
