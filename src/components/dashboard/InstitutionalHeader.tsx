@@ -6,7 +6,7 @@ export function InstitutionalHeader() {
       <div className="container mx-auto px-4 py-5">
         <div className="flex items-center gap-4">
           <div className="flex h-14 w-14 items-center justify-center rounded-full bg-accent overflow-hidden">
-            <img src="/favicon.jpeg" alt="UDSM Logo" className="h-full w-full object-cover" />
+            <img src="/udsm-research-tracker/favicon.jpeg" alt="UDSM Logo" className="h-full w-full object-cover" />
           </div>
           <div className="flex-1">
             <h1 className="text-xl md:text-2xl font-bold text-primary-foreground leading-tight">

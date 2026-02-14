@@ -48,7 +48,7 @@ export function Navbar() {
             <div className="flex items-center justify-between p-4 border-b border-primary/30">
               <div className="flex items-center gap-2">
                 <div className="h-8 w-8 rounded-full bg-accent overflow-hidden flex items-center justify-center">
-                  <img src="/favicon.jpeg" alt="UDSM Logo" className="h-full w-full object-cover" />
+                  <img src="/udsm-research-tracker/favicon.jpeg" alt="UDSM Logo" className="h-full w-full object-cover" />
                 </div>
                 <span className="text-sm font-bold text-primary-foreground">UDSM</span>
               </div>
