@@ -18,11 +18,6 @@ const Dashboard = () => {
   const { data: countries, isLoading: countriesLoading } = useCountryStats();
   const { data: journals, isLoading: journalsLoading } = useJournals();
 
-  // Check database status on mount (only in development)
-  useEffect(() => {
-    // Database check removed for production
-  }, []);
-
   const isLoading = articlesLoading || countriesLoading || journalsLoading;
 
   return (
